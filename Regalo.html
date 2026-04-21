@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riscatta il tuo regalo</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Arial Black', sans-serif;
+        overflow: hidden;
+    }
+
+    /* HERO SECTION */
+    .hero {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        background: url('https://images.unsplash.com/photo-1520975918318-3a6c8a4f3c56?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .gift-img {
+        width: 180px;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+        100% { transform: translateY(0); }
+    }
+
+    .main-title {
+        font-size: 2.8rem;
+        color: #fff;
+        text-shadow: 0 0 15px #00eaff, 0 0 30px #00eaff;
+        margin-top: 20px;
+        font-weight: 900;
+    }
+
+    .subtitle {
+        font-size: 2.2rem;
+        color: #ffcc00;
+        text-shadow: 0 0 10px #ffcc00;
+        margin-top: -10px;
+        font-weight: 900;
+    }
+
+    .cta {
+        margin-top: 30px;
+        padding: 20px 60px;
+        font-size: 1.8rem;
+        border: none;
+        border-radius: 12px;
+        background: #00eaff;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0 25px #00eaff;
+        animation: glow 1.5s infinite alternate, bounce 1.5s infinite;
+    }
+
+    @keyframes glow {
+        from { box-shadow: 0 0 10px #00eaff; }
+        to { box-shadow: 0 0 25px #00eaff; }
+    }
+
+    @keyframes bounce {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+        100% { transform: translateY(0); }
+    }
+
+    .signature {
+        margin-top: 40px;
+        font-size: 1.2rem;
+        opacity: 0.8;
+        color: white;
+        text-shadow: 0 0 10px black;
+    }
+
+    /* OVERLAY COUNTDOWN */
+    #overlay, #finalScreen {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95);
+        color: white;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-size: 2.5rem;
+        text-align: center;
+    }
+
+    .blink {
+        animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.2; }
+        100% { opacity: 1; }
+    }
+
+    .loader {
+        border: 8px solid #333;
+        border-top: 8px solid #00eaff;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        margin-top: 30px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<div class="hero">
+    <img src="https://pngimg.com/uploads/gift/gift_PNG5957.png" class="gift-img">
+    <h1 class="main-title">RISCATTA IL TUO REGALO</h1>
+
+    <button class="cta" onclick="startCountdown()">RISCATTA ORA</button>
+
+    
+</div>
+
+<!-- COUNTDOWN -->
+<div id="overlay">
+    <div id="countText">5</div>
+</div>
+
+<!-- FINAL SCREEN -->
+<div id="finalScreen">
+    <div class="blink" style="font-size:2rem;">Preparati… sta per succedere qualcosa di EPICO!</div>
+    <div class="loader"></div>
+</div>
+
+<!-- AUDIO -->
+<audio id="beepSound">
+    <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+</audio>
+
+<script>
+function startCountdown() {
+    const overlay = document.getElementById("overlay");
+    const countText = document.getElementById("countText");
+    const beep = document.getElementById("beepSound");
+
+    overlay.style.display = "flex";
+
+    let count = 5;
+
+    // L’audio parte perché è dentro un click
+    beep.play();
+
+    const interval = setInterval(() => {
+        beep.play();
+        count--;
+        countText.textContent = count;
+
+        if (count === 0) {
+            clearInterval(interval);
+            countText.textContent = "";
+            showFinalScreen();
+        }
+    }, 1000);
+}
+
+function showFinalScreen() {
+    document.getElementById("overlay").style.display = "none";
+    const final = document.getElementById("finalScreen");
+    final.style.display = "flex";
+
+    final.style.background = "black";
+    final.innerHTML = `
+        <div class="blink" style="font-size:2rem;">
+            Preparati… sta per succedere qualcosa di EPICO!
+        </div>
+        <div class="loader"></div>
+    `;
+
+    // Dopo 10 secondi → mostra il messaggio finale
+    setTimeout(() => {
+        final.innerHTML = `
+            <div class="blink" style="font-size:2rem; color:#ffcc00;">
+                Reset del dispositivo effettuato
+            </div>
+        `;
+        final.style.background = "black";
+    }, 10000);
+}
+
+</script>
+
+</body>
+</html>
